@@ -5,6 +5,7 @@ import Nav from './Nav'
 class UnansweredQuestions extends Component {
     
     render(){
+        //console.log(this.props.ques)
 
         return(
             
@@ -24,20 +25,20 @@ class UnansweredQuestions extends Component {
 
 function mapStateToProps({questions, users, authedUser}){
 const unansweredQuestions =[];
+const ques = Object.keys(questions).map((id=> questions[id])).sort((a,b) => b.timestamp - a.timestamp)
 
- Object.keys(questions).forEach((questionId)=>{
-    const votedOption1 = questions[questionId].optionOne.votes.indexOf(authedUser)
-    const votedOption2 = questions[questionId].optionTwo.votes.indexOf(authedUser)
+ Object.keys(ques).forEach((id)=>{
+    const votedOption1 = ques[id].optionOne.votes.indexOf(authedUser)
+    const votedOption2 = ques[id].optionTwo.votes.indexOf(authedUser)
  
     if(votedOption1 === -1 && votedOption2 === -1){
-        unansweredQuestions.push(questionId)
+        unansweredQuestions.push(ques[id].id)
     }
 })
-
     return{
         
         questionId: unansweredQuestions,
-        authedUser
+        authedUser,
     }
 }
 

@@ -15,29 +15,39 @@ class QuestionDetails extends Component {
     }
 
     render(){
-        const {question,authedUser} = this.props;
-     
-   
+        const {question,authedUser, avatarURL} = this.props;
+        var selected1 = null;
+        var selected2= null;
         const isQuestionAnsweredBefore=(question,authedUser)=>{
             const optionOneVotes=question.optionOne.votes;
             const optionTwoVotes=question.optionTwo.votes;
-            if(optionOneVotes.indexOf(authedUser)>-1 || optionTwoVotes.indexOf(authedUser)>-1){
-             
+            if(optionOneVotes.indexOf(authedUser)>-1){
+             selected1 = optionOneVotes;
+              return true;
+            
+            }
+            else if(optionTwoVotes.indexOf(authedUser)>-1){
+              selected2 = optionTwoVotes;
                 return true;
+                
             }
             return false;
+            
+
         }
         
-
         return(
        <div>
+         <img className="boardAvatar" src={avatarURL}  />
         <p className = "question-header">{question.author} asks </p>
+        
         <p style={{color:'black', marginTop:20, marginBottom:20}} className = "question-header">  Would you rather.......</p>
                   <input 
                   type="radio" 
                   value={question.optionOne.text} 
                   name="optionOne" 
-                  disabled={isQuestionAnsweredBefore(question,authedUser)}
+                  disabled={isQuestionAnsweredBefore(question,authedUser)} 
+                  checked = {selected1}
                   onClick={() => {this.answerQuestion('optionOne')}}
                   /> {question.optionOne.text}
                   <p>
@@ -54,6 +64,7 @@ class QuestionDetails extends Component {
                  value={question.optionTwo.text} 
                  name="optionTwo"
                  disabled={isQuestionAnsweredBefore(question,authedUser)} 
+                 checked = {selected2}
                  onClick={() => {this.answerQuestion('optionTwo')}}
                  /> {question.optionTwo.text}
                <p>
@@ -74,11 +85,13 @@ class QuestionDetails extends Component {
 
 function mapStateToProps({ users, questions, authedUser }, props ) {
 const {questionId}=props;
+const avatarURL = (users[questions[questionId].author].avatarURL);
   const question=questions[questionId]
     return {
-        question,
+      question,
       authedUser,
-      users
+      users,
+      avatarURL
     
   }
 }

@@ -24,13 +24,15 @@ class AnsweredQuestions extends Component {
 function mapStateToProps({questions, users, authedUser}){
 
     const answeredQuestions =[];
-     Object.keys(questions).forEach((questionId)=>{
-        const votedOption1 = questions[questionId].optionOne.votes.indexOf(authedUser)
-        const votedOption2 = questions[questionId].optionTwo.votes.indexOf(authedUser)
+    const ques = Object.keys(questions).map((id=> questions[id])).sort((a,b) => b.timestamp - a.timestamp)
+
+     Object.keys(ques).forEach((id)=>{
+        const votedOption1 = ques[id].optionOne.votes.indexOf(authedUser)
+        const votedOption2 = ques[id].optionTwo.votes.indexOf(authedUser)
 
    
         if(votedOption1 > -1 || votedOption2 > -1){
-            answeredQuestions.push(questionId)
+            answeredQuestions.push(ques[id].id)
        
 
 
